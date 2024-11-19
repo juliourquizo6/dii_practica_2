@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace de NFTs</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- Contenedor principal de productos -->
+    <main>
+        {{ prueba }}
+        <section class="nft-gallery">
+            <div class="nft-card">
+                <img src="{{ metadata.image }}" alt="Description of the image">
+                <h2> Nombre: {{ metadata.name }}</h2>
+                <p class="descripcion"> Descripcion: {{ metadata.description }} </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>&copy; 2024 - Practica 2. Jaime y Julio.</p>
+    </footer>
+</body>
+</html>
