@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponseRedirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('myApp/', include('myApp.urls'))
+    path('myApp/', include('myApp.urls')),
+    path('', lambda request: HttpResponseRedirect('/myApp/buscador'))
 ]
 
 if settings.DEBUG:

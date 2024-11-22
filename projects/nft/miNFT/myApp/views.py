@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .web3 import get_nft_metadata
 from .models import NFT
 
@@ -18,25 +18,6 @@ NFT_ABI = [
 		],
 		"name": "approve",
 		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "precio",
-				"type": "uint256"
-			}
-		],
-		"name": "aumentarPrecioToken",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -208,7 +189,7 @@ NFT_ABI = [
 				"type": "uint256"
 			},
 			{
-				"indexed": False,
+				"indexed":False,
 				"internalType": "uint256",
 				"name": "_toTokenId",
 				"type": "uint256"
@@ -233,20 +214,27 @@ NFT_ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "tokenURI",
-				"type": "string"
+				"internalType": "string[]",
+				"name": "tokenURIs",
+				"type": "string[]"
 			}
 		],
-		"name": "mintTokenNuevo",
-		"outputs": [
+		"name": "mintTokensNuevos",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "precio",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "payable",
+		"name": "PrecioPorToken",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -314,6 +302,42 @@ NFT_ABI = [
 			}
 		],
 		"name": "setApprovalForAll",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "f_limite",
+				"type": "uint256"
+			}
+		],
+		"name": "tokenLimite",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "tokenNombre",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "tokenSimbolo",
+				"type": "string"
+			}
+		],
+		"name": "tokenParametros",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -429,6 +453,25 @@ NFT_ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "limites",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "name",
 		"outputs": [
@@ -508,6 +551,25 @@ NFT_ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "tokenIDs",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
@@ -528,9 +590,15 @@ NFT_ABI = [
 
 
 def index(request):
-    prueba = "Hola mi NFT"
-    context = {'prueba': prueba}
-    return render(request, 'galeria.html', context)
+        
+    if 'contract_address' in request.GET and 'token_id' in request.GET:
+        contract_address = request.GET['contract_address']
+        token_id = request.GET['token_id']
+        
+        # Redirigir a la vista get_nft con los parámetros proporcionados
+        return redirect('get_nft', contract_address=contract_address, token_id=token_id)
+
+    return render(request, 'index.html')
 
 
 def get_nft(request, contract_address, token_id):
